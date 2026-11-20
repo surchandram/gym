@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Fitness Progress Tracker · 20 Nov – 18 Dec 2026</title>
+<style>
+:root{
+  --bg:#0a0e0c;--panel:#111a15;--panel2:#16231c;--line:#243329;--text:#e8f1ec;--muted:#8da295;
+  --green:#22c55e;--green2:#16a34a;--amber:#f5b83d;--red:#ef5b5b;--blue:#5aa9ff;
+  --r:14px;color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{margin:0;line-height:1.2}
+h2{font-size:1.15rem}
+h3{font-size:1rem}
+small,.muted{color:var(--muted)}
+a{color:var(--green)}
+button,input,select,textarea{font:inherit;color:inherit}
+header.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 10px;max-width:1100px;margin:0 auto}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--green);color:#04210f;font-weight:900}
+.brand h1{font-size:1.1rem}
+.saveind{font-size:.8rem;color:var(--muted);text-align:right}
+.saveind b{color:var(--green)}
+nav.tabs{position:sticky;top:0;z-index:30;background:rgba(10,14,12,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.tabs .in{display:flex;gap:6px;max-width:1100px;margin:0 auto;padding:8px 12px}
+.tabbtn{flex:1;padding:9px 6px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--muted);cursor:pointer;font-weight:600}
+.tabbtn.on{background:var(--panel2);border-color:var(--line);color:var(--green)}
+main{max-width:1100px;margin:0 auto;padding:12px 12px 80px}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:14px}
+.card>h2,.card>.hd{margin-bottom:10px}
+.hd{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.stat{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px}
+.stat .k{font-size:.75rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.stat .v{font-size:1.5rem;font-weight:700;margin-top:2px}
+.stat .s{font-size:.8rem;color:var(--muted)}
+.pos{color:var(--green)}.neg{color:var(--red)}.warn{color:var(--amber)}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:8px 12px;border-radius:10px;cursor:pointer;text-decoration:none;font-weight:600;font-size:.9rem}
+.btn:hover{border-color:var(--green)}
+.btn.pri{background:var(--green);border-color:var(--green);color:#04210f}
+.btn.sm{padding:5px 9px;font-size:.8rem}
+.btn.danger:hover{border-color:var(--red);color:var(--red)}
+input[type=text],input[type=number],select,textarea{width:100%;background:#0c1511;border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-height:38px}
+textarea{resize:vertical;min-height:60px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--green);outline-offset:-1px}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--green);flex:none;cursor:pointer}
+label.fld{display:block;font-size:.8rem;color:var(--muted)}
+label.fld>input,label.fld>select,label.fld>textarea{margin-top:3px;color:var(--text);font-size:.95rem}
+/* date bar */
+.datebar{position:sticky;top:53px;z-index:20;background:rgba(10,14,12,.96);padding:8px 0;display:flex;gap:6px;align-items:center;border-bottom:1px solid var(--line);margin-bottom:12px}
+.strip{display:flex;gap:5px;overflow-x:auto;flex:1;padding:2px;scrollbar-width:thin}
+.dchip{flex:none;width:46px;padding:5px 0 4px;border-radius:10px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:.7rem;color:var(--muted)}
+.dchip b{font-size:1rem;color:var(--text)}
+.dchip i{display:block;height:3px;width:30px;background:#233;border-radius:3px;overflow:hidden;position:relative}
+.dchip i::after{content:"";position:absolute;inset:0;width:var(--p,0%);background:var(--green)}
+.dchip.rest{opacity:.75}
+.dchip.sel{border-color:var(--green);background:var(--panel2);box-shadow:0 0 0 1px var(--green) inset}
+.dchip.today{color:var(--amber)}
+.nav-btn{flex:none}
+.jump{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:2px}
+.jump a{flex:none;padding:5px 11px;border:1px solid var(--line);border-radius:99px;text-decoration:none;color:var(--muted);font-size:.82rem;background:var(--panel)}
+.jump a:hover{color:var(--green);border-color:var(--green)}
+section.blk{scroll-margin-top:120px}
+/* day header */
+.dayhead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;background:var(--green);color:#04210f;font-weight:800;font-size:.8rem}
+.badge.rest{background:var(--blue)}
+.bar{height:10px;background:#0c1511;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.bar>span{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .25s}
+.bar.amber>span{background:var(--amber)}
+.bar.red>span{background:var(--red)}
+/* checklist */
+.chk{display:flex;gap:12px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--panel2);cursor:pointer}
+.chk.done{border-color:var(--green2)}
+.chk.done span.t{text-decoration:line-through;color:var(--muted)}
+.opt{font-size:.72rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:0 5px;margin-left:6px}
+/* exercise card */
+.ex{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:14px;border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--panel2)}
+.ex.done{border-color:var(--green)}
+.imgs{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+.imgs img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:9px;background:#0c1511;border:1px solid var(--line)}
+.ex h3{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.presc{display:inline-block;background:#0c1511;border:1px solid var(--line);padding:2px 9px;border-radius:99px;font-size:.82rem;color:var(--green)}
+.sets{display:grid;grid-template-columns:44px 1fr 1fr;gap:6px;align-items:center;margin:10px 0}
+.sets .h{font-size:.72rem;color:var(--muted);text-transform:uppercase}
+.donebox{display:flex;gap:8px;align-items:center;font-weight:700;cursor:pointer}
+.last{font-size:.8rem;color:var(--muted)}
+.note{font-size:.76rem;color:var(--amber)}
+/* nutrition */
+.meal{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px;background:var(--panel2)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+.chip{border:1px dashed var(--line);background:#0c1511;border-radius:99px;padding:3px 10px;font-size:.8rem;cursor:pointer;color:var(--muted)}
+.chip:hover{border-color:var(--green);color:var(--green)}
+.irow{display:grid;grid-template-columns:26px minmax(90px,2fr) minmax(70px,1fr) repeat(4,minmax(52px,.7fr)) 34px;gap:5px;align-items:center;margin-bottom:5px}
+.irow input[type=text],.irow input[type=number]{padding:6px;min-height:34px;font-size:.85rem}
+.ihead{font-size:.68rem;color:var(--muted);text-transform:uppercase}
+.sub{font-size:.8rem;color:var(--muted);margin-top:6px}
+/* supplements */
+.sup{display:grid;grid-template-columns:130px 1fr auto auto;gap:10px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}
+.sup label.tk{display:flex;gap:6px;align-items:center;font-size:.85rem;cursor:pointer}
+/* tables */
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{padding:7px 9px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{color:var(--muted);font-weight:600;font-size:.74rem;text-transform:uppercase}
+/* heat */
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal .dh{font-size:.7rem;color:var(--muted);text-align:center}
+.cell{aspect-ratio:1.2;border-radius:8px;border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.75rem;cursor:pointer;background:var(--panel2);color:var(--text)}
+.cell b{font-size:.95rem}
+.cell.empty{border:0;background:transparent;cursor:default}
+.cell.rest{color:var(--blue)}
+.cell.sel{outline:2px solid var(--amber)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin:6px 0}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+svg.ch{width:100%;height:auto;display:block}
+svg.ch text{fill:var(--muted);font-size:11px}
+.ring text{fill:var(--text)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(30px);background:#0d2418;border:1px solid var(--green);color:var(--text);padding:12px 18px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:100;max-width:92vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.err{background:#2a1010;border-color:var(--red)}
+.banner{background:#2a2410;border:1px solid var(--amber);color:var(--amber);border-radius:10px;padding:10px 12px;margin:8px 12px;max-width:1076px}
+.okbox{background:#0d2418;border:1px solid var(--green);border-radius:10px;padding:10px 12px;margin-top:10px}
+details>summary{cursor:pointer;font-weight:600}
+@media(max-width:680px){
+  .ex{grid-template-columns:1fr}
+  .imgs{grid-template-columns:1fr 1fr}
+  .irow{grid-template-columns:26px 1fr 1fr 34px}
+  .irow .m{grid-column:span 1}
+  .irow .nm{grid-column:2 / span 1}
+  .sup{grid-template-columns:1fr 1fr}
+  .sup .nmx{grid-column:1 / -1}
+  .datebar{top:53px}
+}
+@media print{nav.tabs,.datebar,.jump{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><div class="logo">▲</div><div><h1>Fitness Progress Tracker</h1><small>Fri 20 Nov – Fri 18 Dec 2026 · 29 days</small></div></div>
+  <div class="saveind" id="saveInd">Loading…</div>
+</header>
+<nav class="tabs"><div class="in" id="tabs">
+  <button class="tabbtn" data-act="tab" data-tab="dash">Dashboard</button>
+  <button class="tabbtn" data-act="tab" data-tab="daily">Daily Log</button>
+  <button class="tabbtn" data-act="tab" data-tab="data">Data &amp; Export</button>
+</div></nav>
+<div id="warn"></div>
+<main>
+  <section id="tab-dash" class="tab"></section>
+  <section id="tab-daily" class="tab">
+    <div class="datebar">
+      <button class="btn nav-btn" data-act="prev" aria-label="Previous day">‹</button>
+      <div class="strip" id="strip"></div>
+      <button class="btn nav-btn" data-act="next" aria-label="Next day">›</button>
+      <button class="btn nav-btn pri" data-act="today">Today</button>
+    </div>
+    <div id="daily"></div>
+  </section>
+  <section id="tab-data" class="tab"></section>
+</main>
+<div id="toast" role="status"></div>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+
+<script>
+"use strict";
+/* =====================================================================
+   CONSTANTS & PLAN
+   ===================================================================== */
+const START = "2026-11-20", END = "2026-12-18";
+const KEY = "fitnessTracker.v1", UIKEY = "fitnessTracker.ui", BACKUPKEY = "fitnessTracker.backup", EXPKEY = "fitnessTracker.lastExport";
+const WD = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const SCHEDULE = {Monday:"push",Tuesday:"pull",Wednesday:"legs",Thursday:"rest",Friday:"upper",Saturday:"lower",Sunday:"rest"};
+const IMGBASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/";
+
+const pad = n => String(n).padStart(2,"0");
+const isoOf = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parseISO = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d); };
+const wdOf = s => WD[parseISO(s).getDay()];
+const DATES = (() => { const a=[]; const d=parseISO(START), e=parseISO(END); for(;d<=e;d.setDate(d.getDate()+1)) a.push(isoOf(d)); return a; })();
+const fmtDate = (s,o) => parseISO(s).toLocaleDateString("en-GB", o||{weekday:"short",day:"numeric",month:"short"});
+
+const X = (id,name,sets,reps,db,note) => ({id,name,sets,reps,db,note:note||""});
+const PLAN = {
+  push:{label:"Push",ex:[
+    X("push-bench","Bench Press",3,"6–10","Barbell_Bench_Press_-_Medium_Grip"),
+    X("push-incdb","Incline Dumbbell Press",3,"8–12","Incline_Dumbbell_Press"),
+    X("push-ohp","Seated Dumbbell Shoulder Press",2,"8–12","Dumbbell_Shoulder_Press"),
+    X("push-lat","Lateral Raise",3,"12–20","Side_Lateral_Raise"),
+    X("push-pd","Triceps Pushdown",2,"10–15","Triceps_Pushdown"),
+    X("push-oh","Overhead Cable Triceps Extension",2,"10–15","Cable_Rope_Overhead_Triceps_Extension")]},
+  pull:{label:"Pull",ex:[
+    X("pull-lpd","Lat Pulldown",3,"8–12","Wide-Grip_Lat_Pulldown"),
+    X("pull-csr","Chest-Supported Row",3,"8–12","Dumbbell_Incline_Row","Reference shows the dumbbell chest-supported (incline bench) row."),
+    X("pull-scr","Seated Cable Row",2,"10–12","Seated_Cable_Rows"),
+    X("pull-dbc","Dumbbell Curl",2,"10–12","Dumbbell_Bicep_Curl"),
+    X("pull-ham","Hammer Curl",2,"10–12","Hammer_Curls"),
+    X("pull-rpd","Reverse Pec Deck",2,"12–20","Reverse_Machine_Flyes")]},
+  legs:{label:"Legs",ex:[
+    X("legs-sq","Squat",3,"6–10","Barbell_Squat"),
+    X("legs-lp","Leg Press",2,"10–12","Leg_Press"),
+    X("legs-rdl","Romanian Deadlift",3,"8–10","Romanian_Deadlift"),
+    X("legs-lc","Seated Leg Curl",2,"10–15","Seated_Leg_Curl"),
+    X("legs-calf","Calf Raise",3,"12–20","Standing_Calf_Raises"),
+    X("legs-cc","Cable Crunch",2,"12–15","Cable_Crunch"),
+    X("legs-hkr","Hanging Knee Raise",2,"10–15","Hanging_Leg_Raise","Reference shows the hanging leg raise — for the knee-raise version, bend the knees as you lift.")]},
+  rest:{label:"Rest",ex:[]},
+  upper:{label:"Upper",ex:[
+    X("up-incdb","Incline Dumbbell Press",3,"8–12","Incline_Dumbbell_Press"),
+    X("up-lpd","Lat Pulldown",3,"8–12","Wide-Grip_Lat_Pulldown"),
+    X("up-scr","Seated Cable Row",2,"10–12","Seated_Cable_Rows"),
+    X("up-lat","Lateral Raise",2,"12–20","Side_Lateral_Raise"),
+    X("up-ez","EZ-Bar Curl",2,"10–12","EZ-Bar_Curl"),
+    X("up-pd","Triceps Pushdown",2,"10–15","Triceps_Pushdown")]},
+  lower:{label:"Lower",ex:[
+    X("low-lp","Leg Press",3,"10–12","Leg_Press"),
+    X("low-bss","Bulgarian Split Squat",2,"8–10 each leg","Split_Squat_with_Dumbbells","Reference shows the dumbbell split squat with rear foot on a bench (Bulgarian setup)."),
+    X("low-lc","Seated Leg Curl",3,"10–15","Seated_Leg_Curl"),
+    X("low-add","Adductor Machine",2,"12–15","Thigh_Adductor"),
+    X("low-sc","Seated Calf Raise",3,"12–20","Seated_Calf_Raise"),
+    X("low-rc","Reverse Crunch",2,"10–15","Reverse_Crunch")]}
+};
+const ROUTINE_TRAIN = [
+  ["wake","Wake up around 6:00–6:30 AM"],
+  ["banana","Eat one banana and drink water before the gym"],
+  ["gym","Reach gym around 7:00 AM"],
+  ["treadmill","Treadmill warm-up – 10 min (first 5 min at speed 6, next 5 min at speed 8)"],
+  ["workout","Complete scheduled workout"],
+  ["postmeal","Post-workout meal"],
+  ["nutrition","Follow nutrition plan"],
+  ["supps","Take supplements (see supplement tracker)"],
+  ["water","Track water intake"],
+  ["sleep","Aim for 7–9 hours of sleep tonight"]];
+const ROUTINE_REST = [
+  ["wake","Wake up around 6:00–6:30 AM"],
+  ["norest","No resistance training today"],
+  ["walk","Relaxed walking",true],
+  ["hydration","Hydration – reach your water target"],
+  ["nutrition","Balanced nutrition – follow nutrition plan"],
+  ["supps","Take supplements (see supplement tracker)"],
+  ["water","Track water intake"],
+  ["sleep","Recovery & sleep – aim for 7–9 hours"]];
+const MEALS = [
+  {key:"morning",label:"Morning / Post-workout",time:"after the gym",planned:[
+    ["Boiled eggs","2"],["MuscleBlaze Super Gainer XXL","½ serving"],["Milk","250–300 ml"],["Banana","1"],["Omega-3 supplement",""]],core:5},
+  {key:"11am",label:"11 AM",time:"mid-morning",planned:[["Milk tea",""],["Roasted chana or peanuts","",1]],core:1},
+  {key:"lunch",label:"Lunch",time:"2–3 PM",planned:[["Roti","3"],["Curry",""],["Dal","",1],["Curd","",1]],core:2},
+  {key:"5pm",label:"5 PM",time:"evening",planned:[["Tea",""],["Paneer","",1],["Roasted chana","",1],["Boiled eggs","",1]],core:1},
+  {key:"dinner",label:"Dinner",time:"8 PM",planned:[["Rice",""],["Curry",""],["Dal","",1],["Soy","",1],["Paneer","",1],["Chicken","",1],["Fish","",1]],core:2}
+];
+const SUPPS = [{key:"creatine",name:"Creatine"},{key:"omega3",name:"Omega-3"},{key:"ashwagandha",name:"Ashwagandha"},{key:"vitd3",name:"Vitamin D3"},{key:"magnesium",name:"Magnesium"}];
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+let S = null, memoryOnly = false, ui = {tab:"dash", date:START}, dirtySinceExport = false;
+const clone = o => JSON.parse(JSON.stringify(o));
+const isObj = o => o && typeof o === "object" && !Array.isArray(o);
+
+function defaultMeta(){ return {
+  baselineWeight:60, baselineBench:40, baselineSquat:40, goalWeight:65,
+  targets:{calories:null,proteinMin:95,proteinMax:120,carbs:null,fat:null,waterLiters:3,sleepMin:7,sleepMax:9}
+};}
+const isRest = day => day.scheduledWorkout === "Rest";
+const routineDefs = day => isRest(day) ? ROUTINE_REST : ROUTINE_TRAIN;
+
+function blankDay(date){
+  const wd = wdOf(date), type = SCHEDULE[wd], plan = PLAN[type];
+  const routine = {}; (type==="rest"?ROUTINE_REST:ROUTINE_TRAIN).forEach(r => routine[r[0]] = false);
+  const exercises = {};
+  plan.ex.forEach(e => exercises[e.id] = {name:e.name,prescribed:e.sets+" × "+e.reps,done:false,
+    sets:Array.from({length:e.sets},(_,i)=>({set:i+1,weight_kg:null,reps:null})),notes:""});
+  const meals = {}; MEALS.forEach(m => meals[m.key] = {label:m.label,description:"",items:[]});
+  const supplements = {}; SUPPS.forEach(s => supplements[s.key] = {name:s.name,taken:false,skipped:false,dose:""});
+  return {date,dayNumber:DATES.indexOf(date)+1,weekday:wd,scheduledWorkout:plan.label,workoutComplete:false,
+    routine,exercises,body:{weight_kg:null,bench_kg:null,squat_kg:null,strengthNotes:""},
+    nutrition:{meals},supplements,
+    recovery:{sleepHours:null,waterLiters:null,steps:null,energy:null,soreness:null,notes:""}};
+}
+function deepFill(t,tpl){
+  for(const k of Object.keys(tpl)){
+    if(t[k]===undefined || t[k]===null && tpl[k]!==null && isObj(tpl[k])) t[k] = clone(tpl[k]);
+    else if(isObj(tpl[k]) && isObj(t[k])) deepFill(t[k],tpl[k]);
+  }
+  return t;
+}
+function normalizeDay(raw,date){
+  const tpl = blankDay(date);
+  const d = isObj(raw) ? raw : {};
+  // never trust schedule fields from file
+  ["date","dayNumber","weekday","scheduledWorkout"].forEach(k => d[k] = tpl[k]);
+  deepFill(d,tpl);
+  // exercises: drop unknown ids, ensure set counts
+  for(const id of Object.keys(d.exercises)) if(!tpl.exercises[id]) delete d.exercises[id];
+  for(const id of Object.keys(tpl.exercises)){
+    const e = d.exercises[id];
+    e.name = tpl.exercises[id].name; e.prescribed = tpl.exercises[id].prescribed;
+    if(!Array.isArray(e.sets)) e.sets = clone(tpl.exercises[id].sets);
+    while(e.sets.length < tpl.exercises[id].sets.length) e.sets.push({set:e.sets.length+1,weight_kg:null,reps:null});
+    e.sets.forEach((s,i)=>{ if(!isObj(s)) e.sets[i]={set:i+1,weight_kg:null,reps:null}; e.sets[i].set=i+1; });
+  }
+  for(const m of MEALS){
+    const meal = d.nutrition.meals[m.key];
+    if(!Array.isArray(meal.items)) meal.items = [];
+    meal.label = m.label;
+    meal.items = meal.items.filter(isObj).map(it => Object.assign({name:"",qty:"",eaten:true,calories:null,protein:null,carbs:null,fat:null},it));
+  }
+  return d;
+}
+function normalizeState(raw){
+  const st = {meta:deepFill(isObj(raw&&raw.meta)?raw.meta:{},defaultMeta()),days:{}};
+  for(const date of DATES) st.days[date] = normalizeDay(raw&&raw.days&&raw.days[date],date);
+  return st;
+}
+function lsGet(k){ try{ return localStorage.getItem(k);}catch(e){return null;} }
+function lsSet(k,v){ try{ localStorage.setItem(k,v); return true;}catch(e){return false;} }
+
+function load(){
+  let raw = null;
+  try{ localStorage.setItem("__probe","1"); localStorage.removeItem("__probe"); }catch(e){ memoryOnly = true; }
+  const txt = lsGet(KEY);
+  if(txt){ try{ raw = JSON.parse(txt); }catch(e){ lsSet(KEY+".corrupt."+Date.now(),txt); raw=null; } }
+  S = normalizeState(raw);
+  let u = null; try{ u = JSON.parse(lsGet(UIKEY)||"null"); }catch(e){}
+  if(u){ if(["dash","daily","data"].includes(u.tab)) ui.tab=u.tab; if(DATES.includes(u.date)) ui.date=u.date; }
+  else if(todayInRange()) ui.date = todayISO();
+  if(!raw) save(true);
+}
+let saveTimer = null, lastSaved = null;
+function save(now){
+  const run = () => {
+    saveTimer = null;
+    const ok = lsSet(KEY,JSON.stringify(S));
+    lsSet(UIKEY,JSON.stringify(ui));
+    lastSaved = new Date();
+    if(!ok) memoryOnly = true;
+    paintSaveInd();
+  };
+  dirtySinceExport = true;
+  if(now){ clearTimeout(saveTimer); run(); } else { if(saveTimer) clearTimeout(saveTimer); saveTimer = setTimeout(run,250); paintSaveInd(true); }
+}
+function paintSaveInd(pending){
+  const el = $("#saveInd"); if(!el) return;
+  if(memoryOnly) el.innerHTML = '<b style="color:var(--amber)">⚠ Not saving</b><br>browser storage unavailable';
+  else if(pending) el.innerHTML = "Saving…";
+  else el.innerHTML = '<b>✔ Saved</b> ' + (lastSaved? lastSaved.toLocaleTimeString([], {hour:"2-digit",minute:"2-digit",second:"2-digit"}) : "") + "<br>on this device";
+  const w = $("#warn");
+  if(w) w.innerHTML = memoryOnly ? '<div class="banner">Browser storage is blocked or full (private window?). Entries will be lost on refresh — export your JSON often, or open this file in a normal browser window.</div>' : "";
+}
+window.addEventListener("beforeunload",()=>{ if(saveTimer) save(true); });
+document.addEventListener("visibilitychange",()=>{ if(document.hidden && saveTimer) save(true); });
+
+/* =====================================================================
+   HELPERS
+   ===================================================================== */
+const $ = (s,r=document) => r.querySelector(s);
+const $$ = (s,r=document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const num = v => (v===null||v===undefined||v===""||isNaN(Number(v))) ? null : Number(v);
+const sum = a => a.reduce((x,y)=>x+y,0);
+const avg = a => a.length ? sum(a)/a.length : null;
+const r1 = v => v===null||v===undefined ? "–" : (Math.round(v*10)/10).toString();
+const r0 = v => v===null||v===undefined ? "–" : Math.round(v).toString();
+const todayISO = () => isoOf(new Date());
+const todayInRange = () => { const t=todayISO(); return t>=START && t<=END; };
+function setPath(obj,path,val){ const k=path.split("."); let o=obj; for(let i=0;i<k.length-1;i++){ if(o[k[i]]===undefined) return false; o=o[k[i]]; } o[k[k.length-1]]=val; return true; }
+function getPath(obj,path){ return path.split(".").reduce((o,k)=>o==null?o:o[k],obj); }
+function toast(msg,err){ const t=$("#toast"); t.textContent=msg; t.className="show"+(err?" err":""); clearTimeout(toast.t); toast.t=setTimeout(()=>t.className="",err?6000:4500); }
+function fallbackSVG(name){
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400" viewBox="0 0 300 400"><rect width="300" height="400" fill="#0c1511"/><g stroke="#22c55e" stroke-width="10" stroke-linecap="round" fill="none"><path d="M70 200h160"/><path d="M70 160v80M50 175v50M230 160v80M250 175v50"/></g><text x="150" y="300" fill="#e8f1ec" font-family="sans-serif" font-size="20" text-anchor="middle">'+esc(name)+'</text><text x="150" y="328" fill="#8da295" font-family="sans-serif" font-size="14" text-anchor="middle">image unavailable offline</text></svg>';
+  return "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg);
+}
+document.addEventListener("error",ev=>{ const t=ev.target; if(t && t.tagName==="IMG" && t.dataset.fb){ const n=t.dataset.fb; t.dataset.fb=""; t.src=fallbackSVG(n); } },true);
+
+/* ---- week helpers (Mon–Sun) ---- */
+function mondayOf(s){ const d=parseISO(s); const k=(d.getDay()+6)%7; d.setDate(d.getDate()-k); return isoOf(d); }
+function weeks(){
+  const map = {};
+  DATES.forEach(d => { const m=mondayOf(d); (map[m]=map[m]||[]).push(d); });
+  return Object.keys(map).sort().map((m,i)=>{
+    const ds = map[m], days = ds.map(d=>S.days[d]);
+    const t = todayISO();
+    const wts = days.filter(d=>d.body.weight_kg!=null);
+    const train = days.filter(d=>!isRest(d)), trainElapsed = train.filter(d=>d.date<=t);
+    const nut = days.map(dayNutrition), kc = nut.filter(n=>n.calories!=null), pr = nut.filter(n=>n.protein!=null);
+    const rec = days.map(d=>d.recovery);
+    const supSlots = days.filter(d=>d.date<=t).length*SUPPS.length;
+    const supTaken = sum(days.filter(d=>d.date<=t).map(d=>SUPPS.filter(s=>d.supplements[s.key].taken).length));
+    return {n:i+1,monday:m,dates:ds,from:ds[0],to:ds[ds.length-1],
+      avgWeight:avg(wts.map(d=>d.body.weight_kg)),nWeights:wts.length,
+      meanIdx:wts.length?avg(wts.map(d=>DATES.indexOf(d.date))):null,
+      workoutsDone:train.filter(d=>d.workoutComplete).length,workoutsSched:train.length,workoutsSchedToDate:trainElapsed.length,
+      exDone:sum(days.map(d=>Object.values(d.exercises).filter(e=>e.done).length)),
+      exTotal:sum(days.map(d=>Object.keys(d.exercises).length)),
+      avgCal:avg(kc.map(n=>n.calories)),avgProt:avg(pr.map(n=>n.protein)),
+      avgSleep:avg(rec.map(r=>r.sleepHours).filter(v=>v!=null)),sleep7:rec.filter(r=>r.sleepHours!=null&&r.sleepHours>=S.meta.targets.sleepMin).length,sleepN:rec.filter(r=>r.sleepHours!=null).length,
+      avgWater:avg(rec.map(r=>r.waterLiters).filter(v=>v!=null)),avgSteps:avg(rec.map(r=>r.steps).filter(v=>v!=null)),
+      avgEnergy:avg(rec.map(r=>r.energy).filter(v=>v!=null)),avgSore:avg(rec.map(r=>r.soreness).filter(v=>v!=null)),
+      suppPct:supSlots?Math.round(supTaken/supSlots*100):null,
+      avgPct:avg(days.map(d=>dayProgress(d).pct))};
+  });
+}
+
+/* ---- per-day calculations ---- */
+function dayProgress(day){
+  let done=0,total=0;
+  for(const [k,,opt] of routineDefs(day)){ if(k==="workout"||opt) continue; total++; if(day.routine[k]) done++; }
+  for(const id in day.exercises){ total++; if(day.exercises[id].done) done++; }
+  return {done,total,pct: total?Math.round(done/total*100):0};
+}
+function dayNutrition(day){
+  let cal=[],pro=[],car=[],fat=[],eaten=0,missCal=0,missPro=0;
+  for(const m of MEALS) for(const it of day.nutrition.meals[m.key].items){
+    if(!it.eaten) continue; eaten++;
+    const c=num(it.calories),p=num(it.protein);
+    if(c==null) missCal++; else cal.push(c);
+    if(p==null) missPro++; else pro.push(p);
+    if(num(it.carbs)!=null) car.push(num(it.carbs));
+    if(num(it.fat)!=null) fat.push(num(it.fat));
+  }
+  return {calories:cal.length?sum(cal):null,protein:pro.length?sum(pro):null,carbs:car.length?sum(car):null,fat:fat.length?sum(fat):null,itemsEaten:eaten,itemsMissingCalories:missCal,itemsMissingProtein:missPro};
+}
+function latest(field,upTo){
+  for(let i=DATES.length-1;i>=0;i--){ if(upTo&&DATES[i]>upTo) continue; const v=S.days[DATES[i]].body[field]; if(v!=null) return {v,date:DATES[i]}; }
+  return null;
+}
+function lastPerf(name,date){
+  for(let i=DATES.indexOf(date)-1;i>=0;i--){
+    const d=S.days[DATES[i]];
+    for(const id in d.exercises){ const e=d.exercises[id]; if(e.name===name && e.sets.some(s=>s.weight_kg!=null||s.reps!=null)) return {date:DATES[i],sets:e.sets}; }
+  }
+  return null;
+}
+function lastDose(key,date){
+  for(let i=DATES.indexOf(date)-1;i>=0;i--){ const s=S.days[DATES[i]].supplements[key]; if(s.dose) return s.dose; }
+  return "";
+}
+
+/* =====================================================================
+   ANALYTICS / SUMMARY (used by dashboard AND export)
+   ===================================================================== */
+function computeSummary(){
+  const t = todayISO(), A = DATES.map(d=>S.days[d]);
+  const upTo = A.filter(d=>d.date<=t), before = A.filter(d=>d.date<t);
+  const train = A.filter(d=>!isRest(d));
+  const trainToDate = upTo.filter(d=>!isRest(d));
+  const W = weeks();
+  const wts = A.filter(d=>d.body.weight_kg!=null);
+  const first = wts[0], last = wts[wts.length-1];
+  const wk = W.filter(w=>w.avgWeight!=null);
+  let avgWeeklyGain = null;
+  if(wk.length>=2){ const a=wk[0], b=wk[wk.length-1]; const weeksBetween=(b.meanIdx-a.meanIdx)/7; if(weeksBetween>0) avgWeeklyGain=(b.avgWeight-a.avgWeight)/weeksBetween; }
+  const strength = f => { const e=A.filter(d=>d.body[f]!=null).map(d=>({date:d.date,kg:d.body[f]})); const base=S.meta[f==="bench_kg"?"baselineBench":"baselineSquat"];
+    return {baseline_kg:base,entries:e,latest_kg:e.length?e[e.length-1].kg:null,max_kg:e.length?Math.max(...e.map(x=>x.kg)):null,change_from_baseline_kg:e.length?e[e.length-1].kg-base:null}; };
+  const nut = A.map(dayNutrition), kc = nut.map((n,i)=>({n,d:A[i]})).filter(x=>x.n.calories!=null), pr = nut.filter(n=>n.protein!=null);
+  const tg = S.meta.targets;
+  const rec = A.map(d=>d.recovery);
+  const supp = {};
+  SUPPS.forEach(s=>{
+    const taken=upTo.filter(d=>d.supplements[s.key].taken).length, skipped=upTo.filter(d=>d.supplements[s.key].skipped).length;
+    supp[s.key]={name:s.name,daysTaken:taken,daysSkipped:skipped,daysNotMarked:upTo.length-taken-skipped,adherencePct:upTo.length?Math.round(taken/upTo.length*100):null,
+      dosesLogged:[...new Set(A.map(d=>d.supplements[s.key].dose).filter(Boolean))]};
+  });
+  const exDone = A.filter(d=>d.date<=t).reduce((n,d)=>n+Object.values(d.exercises).filter(e=>e.done).length,0);
+  const exSched = A.filter(d=>d.date<=t).reduce((n,d)=>n+Object.keys(d.exercises).length,0);
+  const missedEx = [];
+  before.forEach(d=>{ for(const id in d.exercises) if(!d.exercises[id].done) missedEx.push({date:d.date,workout:d.scheduledWorkout,exercise:d.exercises[id].name}); });
+  const goal = S.meta.goalWeight, curW = last?last.body.weight_kg:null;
+  return {
+    note:"Computed by the app at export time from the entries in 'days'. Averages ignore days with no entry.",
+    asOfDate:t,
+    weight:{baseline_kg:S.meta.baselineWeight,goal_kg:goal,firstLogged_kg:first?first.body.weight_kg:null,latestLogged_kg:curW,latestDate:last?last.date:null,
+      totalChangeFromBaseline_kg:curW!=null?+(curW-S.meta.baselineWeight).toFixed(2):null,daysWithEntry:wts.length,
+      weeklyAverages:W.map(w=>({week:w.n,from:w.from,to:w.to,avgWeight_kg:w.avgWeight!=null?+w.avgWeight.toFixed(2):null,entries:w.nWeights})),
+      avgWeeklyGain_kg:avgWeeklyGain!=null?+avgWeeklyGain.toFixed(3):null,
+      remainingToGoal_kg:curW!=null?+(goal-curW).toFixed(2):null,
+      projectedWeeksToGoalAtCurrentRate:(avgWeeklyGain&&avgWeeklyGain>0&&curW!=null&&curW<goal)?+((goal-curW)/avgWeeklyGain).toFixed(1):null,
+      dailyMin_kg:wts.length?Math.min(...wts.map(d=>d.body.weight_kg)):null,dailyMax_kg:wts.length?Math.max(...wts.map(d=>d.body.weight_kg)):null},
+    workouts:{trainingDaysInPeriod:train.length,scheduledToDate:trainToDate.length,completed:train.filter(d=>d.workoutComplete).length,
+      completionPctToDate:trainToDate.length?Math.round(train.filter(d=>d.workoutComplete&&d.date<=t).length/trainToDate.length*100):null,
+      missedWorkoutDates:before.filter(d=>!isRest(d)&&!d.workoutComplete).map(d=>d.date)},
+    exercises:{scheduledToDate:exSched,completed:exDone,completionPctToDate:exSched?Math.round(exDone/exSched*100):null,missed:missedEx},
+    bench:strength("bench_kg"),squat:strength("squat_kg"),
+    nutrition:{daysWithCalorieEntry:kc.length,avgCalories:kc.length?Math.round(avg(kc.map(x=>x.n.calories))):null,
+      daysWithProteinEntry:pr.length,avgProtein_g:pr.length?+avg(pr.map(n=>n.protein)).toFixed(1):null,
+      avgCarbs_g:avg(nut.map(n=>n.carbs).filter(v=>v!=null)),avgFat_g:avg(nut.map(n=>n.fat).filter(v=>v!=null)),
+      daysMeetingProteinMin:pr.filter(n=>n.protein>=tg.proteinMin).length,targets:clone(tg),
+      caveat:"Totals only include items marked eaten that have macros typed in. Items missing values make a day's total an under-estimate.",
+      itemsEatenMissingCalories:sum(nut.map(n=>n.itemsMissingCalories))},
+    recovery:{daysWithSleep:rec.filter(r=>r.sleepHours!=null).length,avgSleepHours:avg(rec.map(r=>r.sleepHours).filter(v=>v!=null)),
+      daysSleepAtLeastTarget:rec.filter(r=>r.sleepHours!=null&&r.sleepHours>=tg.sleepMin).length,
+      avgWaterLiters:avg(rec.map(r=>r.waterLiters).filter(v=>v!=null)),avgSteps:avg(rec.map(r=>r.steps).filter(v=>v!=null)),
+      avgEnergy:avg(rec.map(r=>r.energy).filter(v=>v!=null)),avgSoreness:avg(rec.map(r=>r.soreness).filter(v=>v!=null))},
+    supplements:supp,
+    weekly:W.map(w=>({week:w.n,from:w.from,to:w.to,workoutsDone:w.workoutsDone,workoutsScheduled:w.workoutsSched,exercisesDone:w.exDone,exercisesScheduled:w.exTotal,
+      avgWeight_kg:w.avgWeight,avgCalories:w.avgCal,avgProtein_g:w.avgProt,avgSleepHours:w.avgSleep,avgWaterLiters:w.avgWater,avgSteps:w.avgSteps,avgEnergy:w.avgEnergy,avgSoreness:w.avgSore,supplementAdherencePct:w.suppPct}))
+  };
+}
+
+/* =====================================================================
+   CHARTS (inline SVG, no dependencies)
+   ===================================================================== */
+function niceStep(range,n){ const raw=range/n, p=Math.pow(10,Math.floor(Math.log10(raw||1))), f=raw/p; return (f<1.5?1:f<3?2:f<7?5:10)*p; }
+function lineChart(o){
+  const W=680,H=250,m={l:46,r:14,t:12,b:28};
+  const all=[]; o.series.forEach(s=>s.pts.forEach(p=>all.push(p.v))); (o.refs||[]).forEach(r=>all.push(r.v));
+  const hasData=o.series.some(s=>s.pts.length);
+  if(!hasData) return '<div class="muted" style="padding:28px 6px;text-align:center">No entries yet — log values in the Daily Log and the chart will appear here.</div>';
+  let lo=Math.min(...all),hi=Math.max(...all); if(hi-lo<1){hi+=.5;lo-=.5;} const pdg=(hi-lo)*.12; lo-=pdg;hi+=pdg;
+  const st=niceStep(hi-lo,4); lo=Math.floor(lo/st)*st; hi=Math.ceil(hi/st)*st;
+  const x=i=>m.l+(W-m.l-m.r)*i/(DATES.length-1), y=v=>m.t+(H-m.t-m.b)*(1-(v-lo)/(hi-lo));
+  let g='';
+  for(let v=lo;v<=hi+1e-9;v+=st){ g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="#243329" stroke-width="1"/><text x="${m.l-6}" y="${y(v)+4}" text-anchor="end">${+v.toFixed(2)}</text>`; }
+  [0,7,14,21,28].forEach(i=>{ g+=`<text x="${x(i)}" y="${H-8}" text-anchor="${i===0?"start":i===28?"end":"middle"}">${fmtDate(DATES[i],{day:"numeric",month:"short"})}</text>`; });
+  (o.refs||[]).forEach(r=>{ g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y(r.v)}" y2="${y(r.v)}" stroke="${r.color}" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W-m.r}" y="${y(r.v)-5}" text-anchor="end" style="fill:${r.color}">${esc(r.label)}</text>`; });
+  o.series.forEach(s=>{
+    if(s.pts.length>1 && s.line!==false) g+=`<polyline fill="none" stroke="${s.color}" stroke-width="${s.w||2.2}" ${s.dash?'stroke-dasharray="6 4"':''} stroke-linejoin="round" points="${s.pts.map(p=>x(p.i).toFixed(1)+","+y(p.v).toFixed(1)).join(" ")}"/>`;
+    s.pts.forEach(p=>{ g+=`<circle cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="${s.r||3.5}" fill="${s.color}"><title>${esc(p.t)}</title></circle>`; });
+  });
+  const legend='<div class="legend">'+o.series.map(s=>`<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join("")+(o.refs||[]).map(r=>`<span><i style="background:${r.color}"></i>${esc(r.name)}</span>`).join("")+"</div>";
+  return legend+`<svg class="ch" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.title)}">${g}</svg>`;
+}
+function weightChart(){
+  const pts=[]; DATES.forEach((d,i)=>{ const v=S.days[d].body.weight_kg; if(v!=null) pts.push({i,v,t:fmtDate(d)+": "+v+" kg"}); });
+  const wp=weeks().filter(w=>w.avgWeight!=null).map(w=>({i:w.meanIdx,v:w.avgWeight,t:"Week "+w.n+" average: "+r1(w.avgWeight)+" kg"}));
+  return lineChart({title:"Body weight",series:[{name:"Daily weight",color:"#22c55e",pts,w:1.6,r:3.5},{name:"Weekly average",color:"#f5b83d",pts:wp,w:3,r:5}],
+    refs:[{v:S.meta.baselineWeight,color:"#8da295",label:"start "+S.meta.baselineWeight,name:"Starting weight"},{v:S.meta.goalWeight,color:"#5aa9ff",label:"goal "+S.meta.goalWeight,name:"Goal weight"}]});
+}
+function strengthChart(field,name,color,base){
+  const pts=[]; DATES.forEach((d,i)=>{ const v=S.days[d].body[field]; if(v!=null) pts.push({i,v,t:fmtDate(d)+": "+v+" kg"}); });
+  return lineChart({title:name,series:[{name:name+" working weight",color,pts}],refs:[{v:base,color:"#8da295",label:"start "+base,name:"Starting weight"}]});
+}
+
+/* =====================================================================
+   RENDER: DAILY LOG
+   ===================================================================== */
+function renderStrip(){
+  $("#strip").innerHTML = DATES.map(d=>{
+    const day=S.days[d], p=dayProgress(day).pct;
+    return `<button class="dchip ${d===ui.date?"sel":""} ${isRest(day)?"rest":""} ${d===todayISO()?"today":""}" data-act="goto" data-date="${d}" title="${fmtDate(d)} · ${day.scheduledWorkout}"><span>${day.weekday.slice(0,3)}</span><b>${+d.slice(8)}</b><i style="--p:${p}%"></i></button>`;
+  }).join("");
+  const sel=$(".dchip.sel"); if(sel && sel.scrollIntoView) sel.scrollIntoView({inline:"center",block:"nearest"});
+}
+function chkRow(day,k,label,opt){
+  return `<label class="chk ${day.routine[k]?"done":""}"><input type="checkbox" data-p="routine.${k}" ${day.routine[k]?"checked":""}><span class="t">${esc(label)}${opt?'<span class="opt">optional</span>':""}</span></label>`;
+}
+function exCard(e,day){
+  const rec=day.exercises[e.id];
+  const lp=lastPerf(e.name,day.date);
+  const lastTxt = lp ? "Last time ("+fmtDate(lp.date,{day:"numeric",month:"short"})+"): "+lp.sets.map(s=>(s.weight_kg!=null?s.weight_kg+"kg":"–")+"×"+(s.reps!=null?s.reps:"–")).join(", ") : "No previous log for this exercise yet.";
+  const yt="https://www.youtube.com/results?search_query="+encodeURIComponent(e.name+" proper form tutorial");
+  return `<div class="ex ${rec.done?"done":""}" data-ex="${e.id}">
+    <div class="imgs">
+      ${[0,1].map(i=>`<img loading="lazy" referrerpolicy="no-referrer" src="${IMGBASE+e.db}/${i}.jpg" data-fb="${esc(e.name)}" alt="${esc(e.name)} – ${i?"finish":"start"} position">`).join("")}
+      <div class="last" style="grid-column:1/-1">Start → finish position · <a href="${IMGBASE+e.db}/0.jpg" target="_blank" rel="noopener">enlarge</a></div>
+    </div>
+    <div>
+      <h3>${esc(e.name)} <span class="presc">${e.sets} × ${esc(e.reps)}</span></h3>
+      <div style="margin:6px 0"><a class="btn sm" href="${yt}" target="_blank" rel="noopener">▶ YouTube form tutorial</a></div>
+      ${e.note?`<div class="note">ⓘ ${esc(e.note)}</div>`:""}
+      <div class="sets"><span class="h">Set</span><span class="h">Weight (kg)</span><span class="h">Reps done</span>
+      ${rec.sets.map((s,i)=>`<b>${i+1}</b><input type="number" inputmode="decimal" step="0.5" min="0" data-n data-p="exercises.${e.id}.sets.${i}.weight_kg" value="${s.weight_kg==null?"":s.weight_kg}" placeholder="kg" aria-label="Set ${i+1} weight"><input type="number" inputmode="numeric" step="1" min="0" data-n data-p="exercises.${e.id}.sets.${i}.reps" value="${s.reps==null?"":s.reps}" placeholder="${esc(e.reps)}" aria-label="Set ${i+1} reps">`).join("")}
+      </div>
+      <div class="last">${esc(lastTxt)} ${lp?`<button class="btn sm" data-act="fillLast" data-ex="${e.id}">Copy last weights</button>`:""}</div>
+      <input type="text" data-p="exercises.${e.id}.notes" value="${esc(rec.notes)}" placeholder="Exercise notes (optional)" style="margin:8px 0">
+      <label class="donebox"><input type="checkbox" data-p="exercises.${e.id}.done" ${rec.done?"checked":""}> Exercise completed</label>
+    </div></div>`;
+}
+function mealBlock(m,day){
+  const meal=day.nutrition.meals[m.key];
+  return `<div class="meal" data-meal="${m.key}">
+    <div class="hd"><h3>${esc(m.label)} <small>· ${esc(m.time)}</small></h3><div><button class="btn sm" data-act="addCore" data-meal="${m.key}">+ Core items</button> <button class="btn sm" data-act="addCustom" data-meal="${m.key}">+ Other food</button></div></div>
+    <div class="chips">${m.planned.map((p,i)=>`<button class="chip" data-act="addPlanned" data-meal="${m.key}" data-i="${i}">+ ${esc(p[0])}${p[1]?" ("+esc(p[1])+")":""}${p[2]?" · optional":""}</button>`).join("")}</div>
+    ${meal.items.length?`<div class="irow ihead"><span></span><span>Food</span><span>Quantity</span><span>kcal</span><span>Prot g</span><span>Carb g</span><span>Fat g</span><span></span></div>`:'<div class="sub">Nothing logged. Tap a chip above or “+ Other food”.</div>'}
+    ${meal.items.map((it,i)=>{ const b=`nutrition.meals.${m.key}.items.${i}`; return `<div class="irow">
+      <input type="checkbox" data-p="${b}.eaten" ${it.eaten?"checked":""} title="Eaten" aria-label="Eaten">
+      <input type="text" data-p="${b}.name" value="${esc(it.name)}" placeholder="Food" aria-label="Food name">
+      <input type="text" data-p="${b}.qty" value="${esc(it.qty)}" placeholder="Qty" aria-label="Quantity">
+      ${["calories","protein","carbs","fat"].map(f=>`<input type="number" inputmode="decimal" min="0" step="any" data-n data-p="${b}.${f}" value="${it[f]==null?"":it[f]}" placeholder="${{calories:"kcal",protein:"g",carbs:"g",fat:"g"}[f]}" aria-label="${f}">`).join("")}
+      <button class="btn sm danger" data-act="delItem" data-meal="${m.key}" data-i="${i}" aria-label="Remove">✕</button></div>`; }).join("")}
+    <textarea data-p="nutrition.meals.${m.key}.description" placeholder="Meal description / notes (e.g. what the curry was, portion size)" style="margin-top:6px">${esc(meal.description)}</textarea>
+  </div>`;
+}
+function renderDaily(){
+  const day=S.days[ui.date], type=SCHEDULE[day.weekday], plan=PLAN[type], rest=isRest(day), tg=S.meta.targets;
+  const sel = (id,k,max,low,high) => `<label class="fld">${k}<select data-n data-p="recovery.${id}"><option value=""></option>${Array.from({length:max-(id==="soreness"?-1:0)},(_,i)=>i+(id==="soreness"?0:1)).map(v=>`<option value="${v}" ${day.recovery[id]===v?"selected":""}>${v}${v===(id==="soreness"?0:1)?" – "+low:v===max?" – "+high:""}</option>`).join("")}</select></label>`;
+  $("#daily").innerHTML = `
+  <div class="jump"><a href="#b-routine">Routine</a><a href="#b-workout">${rest?"Rest day":"Workout"}</a><a href="#b-body">Weight &amp; strength</a><a href="#b-nutri">Nutrition</a><a href="#b-supp">Supplements</a><a href="#b-rec">Recovery</a></div>
+  <div class="card"><div class="dayhead">
+    <div style="flex:1;min-width:220px"><h2>${fmtDate(day.date,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</h2>
+      <div class="muted">Day ${day.dayNumber} of 29 · <span class="badge ${rest?"rest":""}">${day.scheduledWorkout}${rest?" day":""}</span></div></div>
+    <div style="flex:1;min-width:200px" id="hdrProgress"></div></div></div>
+
+  <section class="blk card" id="b-routine"><div class="hd"><h2>Daily routine</h2><small>${rest?"Rest-day recovery checklist":"Training-day checklist"}</small></div>
+    ${routineDefs(day).map(r=>chkRow(day,r[0],r[1],r[2])).join("")}</section>
+
+  <section class="blk card" id="b-workout"><div class="hd"><h2>${rest?"Rest day — recovery":plan.label+" workout"}</h2>${rest?"":`<small>${plan.ex.length} exercises · images: free-exercise-db (public domain)</small>`}</div>
+    ${rest?`<div class="muted" style="line-height:1.8">• No resistance training.<br>• Optional relaxed walking.<br>• Hydration — keep sipping water through the day.<br>• Balanced nutrition — still hit your protein target.<br>• Recovery and sleep — aim for 7–9 hours.</div>`:plan.ex.map(e=>exCard(e,day)).join("")}</section>
+
+  <section class="blk card" id="b-body"><h2>Body weight &amp; strength</h2>
+    <div class="grid g4">
+      <label class="fld">Morning body weight (kg)<input type="number" inputmode="decimal" step="0.1" min="0" data-n data-p="body.weight_kg" value="${day.body.weight_kg==null?"":day.body.weight_kg}" placeholder="e.g. 60.4"></label>
+      <label class="fld">Bench press working weight (kg)<input type="number" inputmode="decimal" step="0.5" min="0" data-n data-p="body.bench_kg" value="${day.body.bench_kg==null?"":day.body.bench_kg}" placeholder="baseline ${S.meta.baselineBench}"></label>
+      <label class="fld">Squat working weight (kg)<input type="number" inputmode="decimal" step="0.5" min="0" data-n data-p="body.squat_kg" value="${day.body.squat_kg==null?"":day.body.squat_kg}" placeholder="baseline ${S.meta.baselineSquat}"></label>
+    </div>
+    <label class="fld" style="margin-top:10px">Strength / performance notes (optional)<textarea data-p="body.strengthNotes" placeholder="How did the lifts feel?">${esc(day.body.strengthNotes)}</textarea></label>
+    <div id="bodySummary" style="margin-top:12px"></div></section>
+
+  <section class="blk card" id="b-nutri"><h2>Nutrition</h2>
+    <div id="nutriSummary"></div>
+    <details style="margin:10px 0 14px"><summary>Daily targets (editable)</summary>
+      <div class="grid g4" style="margin-top:8px">
+        <label class="fld">Calories target (kcal)<input type="number" min="0" data-n data-p="@meta.targets.calories" value="${tg.calories==null?"":tg.calories}" placeholder="set your own"></label>
+        <label class="fld">Protein min (g)<input type="number" min="0" data-n data-p="@meta.targets.proteinMin" value="${tg.proteinMin==null?"":tg.proteinMin}"></label>
+        <label class="fld">Protein max (g)<input type="number" min="0" data-n data-p="@meta.targets.proteinMax" value="${tg.proteinMax==null?"":tg.proteinMax}"></label>
+        <label class="fld">Carbs target (g)<input type="number" min="0" data-n data-p="@meta.targets.carbs" value="${tg.carbs==null?"":tg.carbs}" placeholder="optional"></label>
+        <label class="fld">Fat target (g)<input type="number" min="0" data-n data-p="@meta.targets.fat" value="${tg.fat==null?"":tg.fat}" placeholder="optional"></label>
+        <label class="fld">Water target (L)<input type="number" min="0" step="0.1" data-n data-p="@meta.targets.waterLiters" value="${tg.waterLiters==null?"":tg.waterLiters}"></label>
+      </div></details>
+    <div class="sub" style="margin:0 0 10px">Quantities and macros are not pre-filled — nutrition values depend on your portions, so type the numbers you trust (from labels / an app). Only items ticked “eaten” count toward totals. <button class="btn sm" data-act="copyPrev">Copy previous day's meals</button></div>
+    <div id="meals">${MEALS.map(m=>mealBlock(m,day)).join("")}</div></section>
+
+  <section class="blk card" id="b-supp"><div class="hd"><h2>Supplements</h2><small>Enter doses from your product label / clinician</small></div>
+    ${SUPPS.map(s=>{ const r=day.supplements[s.key]; const ld=lastDose(s.key,day.date); return `<div class="sup"><b class="nmx">${s.name}</b>
+      <input type="text" data-p="supplements.${s.key}.dose" data-supdose="${s.key}" value="${esc(r.dose)}" placeholder="${ld?"last: "+esc(ld):"dose / amount"}" aria-label="${s.name} dose">
+      <label class="tk"><input type="checkbox" data-p="supplements.${s.key}.taken" data-sup="${s.key}" data-kind="taken" ${r.taken?"checked":""}> Taken</label>
+      <label class="tk"><input type="checkbox" data-p="supplements.${s.key}.skipped" data-sup="${s.key}" data-kind="skipped" ${r.skipped?"checked":""}> Skipped</label></div>`; }).join("")}
+  </section>
+
+  <section class="blk card" id="b-rec"><h2>Recovery</h2>
+    <div class="grid g3">
+      <label class="fld">Sleep duration (hours)<input type="number" inputmode="decimal" step="0.25" min="0" max="24" data-n data-p="recovery.sleepHours" value="${day.recovery.sleepHours==null?"":day.recovery.sleepHours}" placeholder="last night, e.g. 7.5"></label>
+      <label class="fld">Water intake (litres)<input type="number" inputmode="decimal" step="0.1" min="0" data-n data-p="recovery.waterLiters" value="${day.recovery.waterLiters==null?"":day.recovery.waterLiters}"></label>
+      <label class="fld">Daily steps<input type="number" inputmode="numeric" step="1" min="0" data-n data-p="recovery.steps" value="${day.recovery.steps==null?"":day.recovery.steps}"></label>
+      ${sel("energy","Energy level (1–10)",10,"very low","very high")}
+      ${sel("soreness","Muscle soreness (0–10)",10,"none","severe")}
+    </div>
+    <label class="fld" style="margin-top:10px">Recovery notes<textarea data-p="recovery.notes" placeholder="Sleep quality, aches, mood…">${esc(day.recovery.notes)}</textarea></label>
+    <h3 style="margin:16px 0 6px">Weekly recovery summary</h3><div class="tw" id="recWeekly"></div></section>`;
+  refreshLive();
+}
+function nutriSummaryHTML(day){
+  const n=dayNutrition(day), tg=S.meta.targets;
+  const row=(label,val,unit,target,tmax)=>{
+    let pct=0,cls="",cmp="";
+    if(val!=null&&target){ pct=Math.min(100,val/target*100); }
+    if(label==="Protein"&&val!=null){ cls=val>=tg.proteinMin?"":"amber"; cmp = val>=tg.proteinMin ? (val<=tg.proteinMax?"in target range ✔":"above range") : (tg.proteinMin-val).toFixed(0)+" g to minimum"; }
+    else if(target&&val!=null) cmp = val>=target ? "target reached ✔" : (target-val).toFixed(0)+" "+unit+" to go";
+    else if(!target) cmp="no target set";
+    return `<div class="stat"><div class="k">${label}</div><div class="v">${val==null?"–":r0(val)}<small style="font-size:.9rem"> ${unit}${target?" / "+(tmax?target+"–"+tmax:target):""}</small></div><div class="bar ${cls}" style="margin:6px 0"><span style="width:${pct}%"></span></div><div class="s">${cmp}</div></div>`;
+  };
+  return `<div class="grid g4">${row("Calories",n.calories,"kcal",tg.calories)}${row("Protein",n.protein,"g",tg.proteinMin,tg.proteinMax)}${row("Carbs",n.carbs,"g",tg.carbs)}${row("Fat",n.fat,"g",tg.fat)}</div>
+  <div class="sub">${n.itemsEaten} item(s) eaten${n.itemsMissingCalories?` · <span class="warn">${n.itemsMissingCalories} without calories typed — total is an under-estimate</span>`:""}.</div>`;
+}
+function bodySummaryHTML(day){
+  const cw=latest("weight_kg"), cb=latest("bench_kg"), cs=latest("squat_kg"), M=S.meta;
+  const w=weeks().find(w=>w.dates.includes(day.date));
+  const gain=cw?cw.v-M.baselineWeight:null;
+  return `<div class="grid g4">
+    <div class="stat"><div class="k">Start → current</div><div class="v">${M.baselineWeight} → ${cw?r1(cw.v):"–"}<small style="font-size:.8rem"> kg</small></div><div class="s">${cw?"latest entry "+fmtDate(cw.date,{day:"numeric",month:"short"}):"no weight logged yet"}</div></div>
+    <div class="stat"><div class="k">Total gained</div><div class="v ${gain==null?"":gain>=0?"pos":"neg"}">${gain==null?"–":(gain>=0?"+":"")+r1(gain)+" kg"}</div><div class="s">goal ${M.goalWeight} kg${cw?" · "+r1(M.goalWeight-cw.v)+" kg to go":""}</div></div>
+    <div class="stat"><div class="k">This week's average</div><div class="v">${w&&w.avgWeight!=null?r1(w.avgWeight)+" kg":"–"}</div><div class="s">${w?w.nWeights+" weigh-in(s), week of "+fmtDate(w.from,{day:"numeric",month:"short"}):""} · judge trend by weekly average, not one day</div></div>
+    <div class="stat"><div class="k">Bench / Squat (latest)</div><div class="v">${cb?cb.v:M.baselineBench} / ${cs?cs.v:M.baselineSquat}<small style="font-size:.8rem"> kg</small></div><div class="s">baseline ${M.baselineBench} / ${M.baselineSquat}</div></div></div>`;
+}
+function recWeeklyHTML(){
+  const W=weeks();
+  return `<table><thead><tr><th>Week</th><th>Avg sleep</th><th>Nights ≥${S.meta.targets.sleepMin}h</th><th>Avg water</th><th>Avg steps</th><th>Avg energy</th><th>Avg soreness</th></tr></thead><tbody>${W.map(w=>`<tr><td>${fmtDate(w.from,{day:"numeric",month:"short"})} – ${fmtDate(w.to,{day:"numeric",month:"short"})}</td><td>${w.avgSleep==null?"–":r1(w.avgSleep)+" h"}</td><td>${w.sleepN?w.sleep7+" / "+w.sleepN+" logged":"–"}</td><td>${w.avgWater==null?"–":r1(w.avgWater)+" L"}</td><td>${w.avgSteps==null?"–":r0(w.avgSteps)}</td><td>${r1(w.avgEnergy)}</td><td>${r1(w.avgSore)}</td></tr>`).join("")}</tbody></table>`;
+}
+function refreshLive(){
+  const day=S.days[ui.date], p=dayProgress(day);
+  const h=$("#hdrProgress"); if(h) h.innerHTML=`<div class="hd"><b>Today's completion</b><b class="pos">${p.pct}%</b></div><div class="bar" style="margin:6px 0"><span style="width:${p.pct}%"></span></div><small>${p.done} of ${p.total} items done (routine + exercises)</small>`;
+  const ns=$("#nutriSummary"); if(ns) ns.innerHTML=nutriSummaryHTML(day);
+  const bs=$("#bodySummary"); if(bs) bs.innerHTML=bodySummaryHTML(day);
+  const rw=$("#recWeekly"); if(rw) rw.innerHTML=recWeeklyHTML();
+  const chip=$(`.dchip[data-date="${ui.date}"] i`); if(chip) chip.style.setProperty("--p",p.pct+"%");
+}
+
+/* =====================================================================
+   RENDER: DASHBOARD
+   ===================================================================== */
+function ring(pct){
+  const R=44,C=2*Math.PI*R;
+  return `<svg class="ring" width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="${R}" fill="none" stroke="#243329" stroke-width="10"/><circle cx="55" cy="55" r="${R}" fill="none" stroke="#22c55e" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*pct/100} ${C}" transform="rotate(-90 55 55)"/><text x="55" y="61" text-anchor="middle" font-size="22" font-weight="700">${pct}%</text></svg>`;
+}
+function renderDash(){
+  const sm=computeSummary(), M=S.meta, tg=M.targets;
+  const inRange=todayInRange(), fd=inRange?todayISO():(todayISO()<START?START:END);
+  const day=S.days[fd], p=dayProgress(day), n=dayNutrition(day);
+  const cw=sm.weight.latestLogged_kg, gain=sm.weight.totalChangeFromBaseline_kg;
+  const cb=sm.bench.latest_kg, cs=sm.squat.latest_kg;
+  const W=weeks();
+  const wnow=W.find(w=>w.dates.includes(fd));
+  const totalTrain=sm.workouts.trainingDaysInPeriod, totalEx=DATES.reduce((a,d)=>a+Object.keys(S.days[d].exercises).length,0);
+  const dayType=SCHEDULE[day.weekday];
+  // calendar
+  const first=parseISO(DATES[0]); const lead=(first.getDay()+6)%7;
+  let cells=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(x=>`<div class="dh">${x}</div>`).join("")+'<div class="cell empty"></div>'.repeat(lead);
+  DATES.forEach(d=>{ const dd=S.days[d], pp=dayProgress(dd).pct, rest=isRest(dd); const bg=rest?"": `background:rgba(34,197,94,${(.08+pp/100*.8).toFixed(2)})`;
+    cells+=`<div class="cell ${rest?"rest":""} ${d===fd?"sel":""}" style="${bg}" data-act="goto-daily" data-date="${d}" title="${fmtDate(d)} · ${dd.scheduledWorkout}${rest?"":" · "+pp+"%"}"><b>${+d.slice(8)}</b><span>${rest?"rest":pp+"%"}</span></div>`; });
+  $("#tab-dash").innerHTML=`
+  <div class="card"><div class="dayhead">
+    ${ring(p.pct)}
+    <div style="flex:1;min-width:230px"><div class="muted">${inRange?"Today":(todayISO()<START?"Tracking starts":"Tracking ended")}</div>
+      <h2 style="font-size:1.35rem">${fmtDate(fd,{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</h2>
+      <div style="margin:6px 0"><span class="badge ${isRest(day)?"rest":""}">${day.scheduledWorkout}${isRest(day)?" day":" workout"}</span> <small>Day ${day.dayNumber} of 29</small></div>
+      <small>${p.done} of ${p.total} items done today</small></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn pri" data-act="goto-daily" data-date="${fd}">Open today's log</button><button class="btn" data-act="tab" data-tab="data">Export</button></div></div></div>
+
+  <div class="grid g4" style="margin-bottom:14px">
+    <div class="stat"><div class="k">Workouts completed</div><div class="v">${sm.workouts.completed}<small style="font-size:.9rem"> / ${totalTrain}</small></div><div class="s">${sm.workouts.completionPctToDate==null?"":sm.workouts.completionPctToDate+"% of "+sm.workouts.scheduledToDate+" scheduled so far"}</div></div>
+    <div class="stat"><div class="k">Exercises completed</div><div class="v">${sm.exercises.completed}<small style="font-size:.9rem"> / ${totalEx}</small></div><div class="s">${sm.exercises.completionPctToDate==null?"":sm.exercises.completionPctToDate+"% of those scheduled so far"}</div></div>
+    <div class="stat"><div class="k">Current body weight</div><div class="v">${cw==null?"–":r1(cw)+" kg"}</div><div class="s">start ${M.baselineWeight} kg · goal ${M.goalWeight} kg</div></div>
+    <div class="stat"><div class="k">Gained since baseline</div><div class="v ${gain==null?"":gain>=0?"pos":"neg"}">${gain==null?"–":(gain>=0?"+":"")+r1(gain)+" kg"}</div><div class="s">${sm.weight.remainingToGoal_kg==null?"":r1(sm.weight.remainingToGoal_kg)+" kg to goal"}${sm.weight.avgWeeklyGain_kg!=null?" · avg "+(sm.weight.avgWeeklyGain_kg>=0?"+":"")+sm.weight.avgWeeklyGain_kg.toFixed(2)+" kg/week":""}</div></div>
+    <div class="stat"><div class="k">Bench working weight</div><div class="v">${cb==null?M.baselineBench:cb} kg</div><div class="s">baseline ${M.baselineBench} kg</div></div>
+    <div class="stat"><div class="k">Squat working weight</div><div class="v">${cs==null?M.baselineSquat:cs} kg</div><div class="s">baseline ${M.baselineSquat} kg</div></div>
+    <div class="stat"><div class="k">Nutrition (${inRange?"today":fmtDate(fd,{day:"numeric",month:"short"})})</div><div class="v">${n.calories==null?"–":r0(n.calories)}<small style="font-size:.9rem"> kcal</small></div><div class="s">${tg.calories?"target "+tg.calories+" kcal":"no calorie target set"}</div></div>
+    <div class="stat"><div class="k">Protein (${inRange?"today":"that day"})</div><div class="v">${n.protein==null?"–":r0(n.protein)}<small style="font-size:.9rem"> g</small></div><div class="s">target ${tg.proteinMin}–${tg.proteinMax} g · period avg ${sm.nutrition.avgProtein_g==null?"–":r0(sm.nutrition.avgProtein_g)} g</div></div>
+  </div>
+
+  <div class="card"><div class="hd"><h2>Weekly consistency</h2><small>Mon–Sun weeks · tap a day to open it</small></div>
+    <div class="grid g2"><div><div class="cal">${cells}</div><div class="legend"><span><i style="background:rgba(34,197,94,.9)"></i>complete</span><span><i style="background:rgba(34,197,94,.15)"></i>started / none</span><span><i style="background:#5aa9ff"></i>rest day</span></div></div>
+    <div class="tw"><table><thead><tr><th>Week</th><th>Workouts</th><th>Exercises</th><th>Avg done</th><th>Supps</th></tr></thead><tbody>${W.map(w=>`<tr><td>${fmtDate(w.from,{day:"numeric",month:"short"})}–${fmtDate(w.to,{day:"numeric",month:"short"})}</td><td>${w.workoutsDone}/${w.workoutsSched}</td><td>${w.exDone}/${w.exTotal}</td><td>${r0(w.avgPct)}%</td><td>${w.suppPct==null?"–":w.suppPct+"%"}</td></tr>`).join("")}</tbody></table></div></div></div>
+
+  <div class="grid g2">
+    <div class="card"><h2>Body weight trend</h2>${weightChart()}<div class="sub">Daily weights bounce around with water, food and sleep — follow the amber weekly-average line.</div></div>
+    <div class="card"><h2>Weekly averages</h2><div class="tw"><table><thead><tr><th>Week</th><th>Avg weight</th><th>Δ vs prev</th><th>Avg kcal</th><th>Avg protein</th><th>Entries</th></tr></thead><tbody>${W.map((w,i)=>{ const prev=W.slice(0,i).reverse().find(x=>x.avgWeight!=null); const dlt=(w.avgWeight!=null&&prev)?w.avgWeight-prev.avgWeight:null; return `<tr><td>${fmtDate(w.from,{day:"numeric",month:"short"})}–${fmtDate(w.to,{day:"numeric",month:"short"})}</td><td>${w.avgWeight==null?"–":r1(w.avgWeight)+" kg"}</td><td class="${dlt==null?"":dlt>=0?"pos":"neg"}">${dlt==null?"–":(dlt>=0?"+":"")+dlt.toFixed(2)}</td><td>${w.avgCal==null?"–":r0(w.avgCal)}</td><td>${w.avgProt==null?"–":r0(w.avgProt)+" g"}</td><td>${w.nWeights}</td></tr>`; }).join("")}</tbody></table></div>
+    <div class="sub">First and last weeks are partial (period starts on a Friday and ends on a Friday).</div></div>
+    <div class="card"><h2>Bench press progression</h2>${strengthChart("bench_kg","Bench press","#22c55e",M.baselineBench)}</div>
+    <div class="card"><h2>Squat progression</h2>${strengthChart("squat_kg","Squat","#5aa9ff",M.baselineSquat)}</div>
+  </div>`;
+}
+
+/* =====================================================================
+   RENDER: DATA & EXPORT
+   ===================================================================== */
+function renderData(){
+  const le=(()=>{try{return JSON.parse(lsGet(EXPKEY)||"null");}catch(e){return null;}})();
+  const M=S.meta;
+  const rows=DATES.map(d=>{ const day=S.days[d], n=dayNutrition(day), r=day.recovery; const tick=b=>b?'<span class="pos">✔</span>':'<span class="muted">–</span>';
+    const p=dayProgress(day);
+    return `<tr><td><a href="#" data-act="goto-daily" data-date="${d}">${fmtDate(d)}</a></td><td>${day.scheduledWorkout}</td><td>${isRest(day)?"n/a":tick(day.workoutComplete)}</td><td>${p.pct}%</td><td>${tick(day.body.weight_kg!=null)}</td><td>${tick(n.calories!=null)}</td><td>${tick(n.protein!=null)}</td><td>${tick(SUPPS.some(s=>day.supplements[s.key].taken||day.supplements[s.key].skipped))}</td><td>${tick(r.sleepHours!=null)}</td><td>${tick(r.steps!=null)}</td></tr>`; }).join("");
+  $("#tab-data").innerHTML=`
+  <div class="card"><h2>Export progress</h2>
+    <p class="muted" style="margin-top:0">Export on <b>19 December 2026</b> (or any time) and upload the JSON file to ChatGPT for analysis. The file includes all 29 dates — every checkbox, set weight and rep, body weight, nutrition, supplements, sleep, steps and notes — plus computed weekly averages and totals.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn pri" data-act="exportJSON">⬇ Export Progress JSON</button>
+      <button class="btn" data-act="exportCSV">⬇ CSV – daily summary</button>
+      <button class="btn" data-act="exportCSVsets">⬇ CSV – exercise sets</button>
+      <button class="btn" data-act="importBtn">⬆ Import JSON</button></div>
+    <div id="exportMsg">${le?`<div class="okbox">✔ Last export: <b>${esc(le.file)}</b> — ${le.days} days, ${le.kb} KB, ${esc(new Date(le.at).toLocaleString())}.</div>`:`<div class="sub">Nothing exported yet from this browser.</div>`}</div>
+    <div class="sub">Importing replaces the entries for every date in the file. A backup of your current data is kept automatically in this browser before an import.</div></div>
+
+  <div class="card"><h2>Profile &amp; baseline</h2>
+    <div class="grid g4">
+      <label class="fld">Starting weight (kg)<input type="number" step="0.1" data-n data-p="@meta.baselineWeight" value="${M.baselineWeight}"></label>
+      <label class="fld">Goal weight (kg)<input type="number" step="0.1" data-n data-p="@meta.goalWeight" value="${M.goalWeight}"></label>
+      <label class="fld">Baseline bench (kg)<input type="number" step="0.5" data-n data-p="@meta.baselineBench" value="${M.baselineBench}"></label>
+      <label class="fld">Baseline squat (kg)<input type="number" step="0.5" data-n data-p="@meta.baselineSquat" value="${M.baselineSquat}"></label></div></div>
+
+  <div class="card"><h2>Entry checklist</h2><p class="muted" style="margin-top:0">Quick look at which days have data before you export.</p>
+    <div class="tw"><table><thead><tr><th>Date</th><th>Plan</th><th>Workout done</th><th>Done %</th><th>Weight</th><th>Calories</th><th>Protein</th><th>Supps</th><th>Sleep</th><th>Steps</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+
+/* =====================================================================
+   EXPORT / IMPORT
+   ===================================================================== */
+function buildExport(){
+  const days = DATES.map(d=>{ const day=clone(S.days[d]); const n=dayNutrition(day), p=dayProgress(day);
+    day.computed={completionPct:p.pct,itemsDone:p.done,itemsTotal:p.total,exercisesCompleted:Object.values(day.exercises).filter(e=>e.done).length,exercisesScheduled:Object.keys(day.exercises).length,
+      nutritionTotals:{calories:n.calories,protein_g:n.protein,carbs_g:n.carbs,fat_g:n.fat,itemsEaten:n.itemsEaten,itemsMissingCalories:n.itemsMissingCalories,itemsMissingProtein:n.itemsMissingProtein},
+      supplementsTaken:SUPPS.filter(s=>day.supplements[s.key].taken).map(s=>s.name)};
+    return day; });
+  return {
+    app:"Fitness Progress Tracker",schemaVersion:1,exportedAt:new Date().toISOString(),
+    period:{start:START,end:END,days:DATES.length},
+    readme:"Personal fitness log for 20 Nov – 18 Dec 2026. 'days' has one record for every date (blank = not entered, null = no number, false = not ticked). Weights are kg, water is litres, protein/carbs/fat are grams. Exercise 'sets' hold weight_kg and reps per set. Nutrition items count only when eaten=true; macros are values the user typed (never auto-estimated), so totals can under-estimate when items lack numbers. 'summary' contains pre-computed weekly averages, completion rates and strength progression. Goal: gain weight from the baseline toward goal_kg. Suggested analysis: start vs final weight, daily/weekly weight changes, avg weekly gain, avg calories and protein, workout & exercise completion %, missed sessions, bench and squat progression, sleep/recovery consistency, supplement consistency, and whether intake supports the goal.",
+    schedule:SCHEDULE,
+    profile:clone(S.meta),
+    summary:computeSummary(),
+    days
+  };
+}
+function download(name,text,mime){
+  const blob=new Blob([text],{type:mime}), url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function recordExport(file,text,kind){
+  const info={file,days:DATES.length,kb:Math.max(1,Math.round(text.length/1024)),at:new Date().toISOString(),kind};
+  lsSet(EXPKEY,JSON.stringify(info)); dirtySinceExport=false;
+  toast("✔ "+kind+" exported: "+file+" ("+info.kb+" KB, all "+DATES.length+" days). Check your Downloads folder.");
+  if(ui.tab==="data") renderData();
+  return info;
+}
+function exportJSON(){
+  const text=JSON.stringify(buildExport(),null,2), file="fitness-progress_"+START+"_to_"+END+".json";
+  download(file,text,"application/json"); return recordExport(file,text,"JSON");
+}
+const csvCell = v => { if(v==null) return ""; const s=String(v); return /[",\n\r]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; };
+function buildDailyCSV(){
+  const head=["date","weekday","day_number","scheduled_workout","workout_completed","exercises_done","exercises_total","completion_pct","weight_kg","bench_kg","squat_kg","strength_notes","calories","protein_g","carbs_g","fat_g","meal_notes",
+    ...SUPPS.flatMap(s=>[s.key+"_status",s.key+"_dose"]),"sleep_hours","water_l","steps","energy_1_10","soreness_0_10","recovery_notes",...ROUTINE_TRAIN.map(r=>"routine_"+r[0])];
+  const rows=DATES.map(d=>{ const day=S.days[d], n=dayNutrition(day), r=day.recovery, p=dayProgress(day);
+    return [d,day.weekday,day.dayNumber,day.scheduledWorkout,isRest(day)?"":day.workoutComplete,Object.values(day.exercises).filter(e=>e.done).length,Object.keys(day.exercises).length,p.pct,
+      day.body.weight_kg,day.body.bench_kg,day.body.squat_kg,day.body.strengthNotes,n.calories,n.protein,n.carbs,n.fat,
+      MEALS.map(m=>{ const ml=day.nutrition.meals[m.key]; const it=ml.items.map(i=>(i.eaten?"":"[not eaten] ")+i.name+(i.qty?" ("+i.qty+")":"")).join(", "); return (it||ml.description)?m.label+": "+it+(ml.description?" – "+ml.description:""):""; }).filter(Boolean).join(" | "),
+      ...SUPPS.flatMap(s=>{ const x=day.supplements[s.key]; return [x.taken?"taken":x.skipped?"skipped":"",x.dose]; }),
+      r.sleepHours,r.waterLiters,r.steps,r.energy,r.soreness,r.notes,
+      ...ROUTINE_TRAIN.map(rt=>day.routine[rt[0]]===undefined?"":day.routine[rt[0]])];
+  });
+  return [head,...rows].map(r=>r.map(csvCell).join(",")).join("\r\n");
+}
+function buildSetsCSV(){
+  const rows=[["date","weekday","workout","exercise","prescribed","exercise_completed","set","weight_kg","reps","notes"]];
+  DATES.forEach(d=>{ const day=S.days[d]; for(const id in day.exercises){ const e=day.exercises[id]; e.sets.forEach(s=>rows.push([d,day.weekday,day.scheduledWorkout,e.name,e.prescribed,e.done,s.set,s.weight_kg,s.reps,e.notes])); } });
+  return rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
+}
+function exportCSV(sets){
+  const text="﻿"+(sets?buildSetsCSV():buildDailyCSV()), file="fitness-"+(sets?"exercise-sets":"daily")+"_"+START+"_to_"+END+".csv";
+  download(file,text,"text/csv;charset=utf-8"); return recordExport(file,text,sets?"CSV (exercise sets)":"CSV (daily)");
+}
+function applyImport(obj){
+  if(!isObj(obj)) throw new Error("File is not a JSON object.");
+  let list=obj.days; if(isObj(list)) list=Object.values(list);
+  if(!Array.isArray(list)) throw new Error("No 'days' found — is this a file exported from this tracker?");
+  const valid=list.filter(d=>isObj(d)&&DATES.includes(d.date));
+  if(!valid.length) throw new Error("No dates between "+START+" and "+END+" found in the file.");
+  lsSet(BACKUPKEY,JSON.stringify({savedAt:new Date().toISOString(),state:S}));
+  const next={meta:S.meta,days:clone(S.days)};
+  if(isObj(obj.profile)) next.meta=deepFill(obj.profile,defaultMeta());
+  valid.forEach(d=>{ const copy=clone(d); delete copy.computed; next.days[d.date]=normalizeDay(copy,d.date); });
+  S=normalizeState(next); save(true); return valid.length;
+}
+function handleImportFile(file){
+  const fr=new FileReader();
+  fr.onload=()=>{ try{
+      const obj=JSON.parse(fr.result), cnt=(obj&&Array.isArray(obj.days)?obj.days.length:0);
+      if(!confirm("Import "+(cnt||"the")+" day record(s) from “"+file.name+"”?\n\nThis REPLACES your current entries for those dates (a backup is kept in this browser).")) return;
+      const n=applyImport(obj); renderAll(); toast("✔ Import complete: restored "+n+" day(s) from "+file.name+".");
+    }catch(e){ toast("Import failed: "+e.message,true); } };
+  fr.onerror=()=>toast("Could not read the file.",true);
+  fr.readAsText(file);
+}
+
+/* =====================================================================
+   EVENTS
+   ===================================================================== */
+function renderAll(){ renderStrip(); showTab(ui.tab,true); paintSaveInd(); }
+function showTab(t,force){
+  ui.tab=t;
+  $$(".tab").forEach(s=>s.classList.toggle("on",s.id==="tab-"+t));
+  $$(".tabbtn").forEach(b=>b.classList.toggle("on",b.dataset.tab===t));
+  if(t==="dash") renderDash(); else if(t==="daily"){ renderStrip(); renderDaily(); } else renderData();
+  lsSet(UIKEY,JSON.stringify(ui)); if(!force) window.scrollTo(0,0);
+}
+function gotoDate(d){ if(!DATES.includes(d)) return; ui.date=d; lsSet(UIKEY,JSON.stringify(ui)); if(ui.tab!=="daily") showTab("daily"); else { renderStrip(); renderDaily(); } }
+function step(n){ const i=DATES.indexOf(ui.date)+n; if(i>=0&&i<DATES.length) gotoDate(DATES[i]); }
+function addItem(mealKey,name,qty,eaten){ S.days[ui.date].nutrition.meals[mealKey].items.push({name,qty,eaten:eaten!==false,calories:null,protein:null,carbs:null,fat:null}); }
+function rerenderMeals(){ const day=S.days[ui.date]; $("#meals").innerHTML=MEALS.map(m=>mealBlock(m,day)).join(""); refreshLive(); save(); }
+
+document.addEventListener("click",ev=>{
+  const b=ev.target.closest("[data-act]"); if(!b) return;
+  const a=b.dataset.act, day=S.days[ui.date];
+  if(b.tagName==="A") ev.preventDefault();
+  switch(a){
+    case "tab": showTab(b.dataset.tab); break;
+    case "goto": gotoDate(b.dataset.date); break;
+    case "goto-daily": gotoDate(b.dataset.date); window.scrollTo(0,0); break;
+    case "prev": step(-1); break;
+    case "next": step(1); break;
+    case "today": gotoDate(todayInRange()?todayISO():(todayISO()<START?START:END)); break;
+    case "addPlanned":{ const m=MEALS.find(x=>x.key===b.dataset.meal), p=m.planned[+b.dataset.i]; addItem(m.key,p[0],p[1]); rerenderMeals(); break; }
+    case "addCore":{ const m=MEALS.find(x=>x.key===b.dataset.meal); m.planned.filter(p=>!p[2]).forEach(p=>addItem(m.key,p[0],p[1])); rerenderMeals(); break; }
+    case "addCustom": addItem(b.dataset.meal,"",""); rerenderMeals(); { const rows=$$(`[data-meal="${b.dataset.meal}"] .irow`); const last=rows[rows.length-1]; if(last){ const inp=$("input[type=text]",last); if(inp) inp.focus(); } } break;
+    case "delItem": day.nutrition.meals[b.dataset.meal].items.splice(+b.dataset.i,1); rerenderMeals(); break;
+    case "copyPrev":{
+      const i=DATES.indexOf(ui.date); if(i===0){ toast("This is the first day — nothing to copy.",true); break; }
+      const prev=S.days[DATES[i-1]]; const has=MEALS.some(m=>day.nutrition.meals[m.key].items.length);
+      if(has && !confirm("This day already has foods logged. Append yesterday's meals to them?")) break;
+      MEALS.forEach(m=>prev.nutrition.meals[m.key].items.forEach(it=>day.nutrition.meals[m.key].items.push(Object.assign(clone(it),{eaten:true}))));
+      rerenderMeals(); toast("Copied meals from "+fmtDate(DATES[i-1])+". Adjust quantities as needed."); break; }
+    case "fillLast":{ const e=Object.values(PLAN).flatMap(p=>p.ex).find(x=>x.id===b.dataset.ex); const lp=lastPerf(e.name,day.date); if(!lp) break;
+      const rec=day.exercises[e.id]; rec.sets.forEach((s,i)=>{ if(s.weight_kg==null){ const src=lp.sets[Math.min(i,lp.sets.length-1)]; if(src&&src.weight_kg!=null) s.weight_kg=src.weight_kg; } });
+      save(); renderDaily(); document.querySelector(`[data-ex="${e.id}"]`).scrollIntoView({block:"center"}); break; }
+    case "exportJSON": exportJSON(); break;
+    case "exportCSV": exportCSV(false); break;
+    case "exportCSVsets": exportCSV(true); break;
+    case "importBtn": $("#importFile").click(); break;
+  }
+});
+function onField(ev){
+  const t=ev.target; const p=t.dataset&&t.dataset.p; if(!p) return;
+  const isChk=t.type==="checkbox";
+  if(ev.type==="input" && (isChk||t.tagName==="SELECT")) return; // handled by 'change'
+  let val = isChk ? t.checked : (t.dataset.n!==undefined ? num(t.value) : t.value);
+  if(t.dataset.n!==undefined && t.type==="number" && val!=null && t.min!=="" && val<Number(t.min)) val=null;
+  const meta=p[0]==="@", day=S.days[ui.date];
+  if(!setPath(meta?S:day, meta?p.slice(1):p, val)) return;
+  if(meta){ save(); if(ui.tab==="daily") refreshLive(); return; }
+
+  // side effects
+  let m;
+  if((m=p.match(/^exercises\.([^.]+)\.done$/))){
+    const all=Object.values(day.exercises).every(e=>e.done);
+    day.workoutComplete=all; day.routine.workout=all;
+    const wc=$('[data-p="routine.workout"]'); if(wc){ wc.checked=all; wc.closest(".chk").classList.toggle("done",all); }
+    t.closest(".ex").classList.toggle("done",val);
+  }
+  if(p==="routine.workout") day.workoutComplete=val;
+  if(p.startsWith("routine.")) t.closest(".chk").classList.toggle("done",val);
+  if((m=p.match(/^supplements\.([^.]+)\.(taken|skipped)$/))){
+    const key=m[1], kind=m[2], other=kind==="taken"?"skipped":"taken";
+    if(val){ day.supplements[key][other]=false; const o=$(`[data-sup="${key}"][data-kind="${other}"]`); if(o) o.checked=false;
+      if(kind==="taken" && !day.supplements[key].dose){ const ld=lastDose(key,day.date); if(ld){ day.supplements[key].dose=ld; const di=$(`[data-supdose="${key}"]`); if(di) di.value=ld; } } }
+  }
+  if(p==="routine.supps"||false){}
+  save(); refreshLive();
+}
+document.addEventListener("input",onField);
+document.addEventListener("change",onField);
+$("#importFile").addEventListener("change",e=>{ const f=e.target.files[0]; if(f) handleImportFile(f); e.target.value=""; });
+document.addEventListener("keydown",e=>{ if(ui.tab!=="daily"||/INPUT|TEXTAREA|SELECT/.test((e.target.tagName||""))) return; if(e.key==="ArrowLeft") step(-1); if(e.key==="ArrowRight") step(1); });
+
+/* =====================================================================
+   INIT
+   ===================================================================== */
+load();
+if(!DATES.includes(ui.date)) ui.date=START;
+renderAll();
+window.__fit = {get S(){return S;},DATES,PLAN,buildExport,buildDailyCSV,buildSetsCSV,exportJSON,exportCSV,applyImport,computeSummary,wdOf,dayProgress,load,save,ui,renderAll};
+</script>
+</body>
+</html>
